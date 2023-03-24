@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from aqross.app/code/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Mar 2023 18:41:44 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicons/favicon-16x16.png">
+    <link rel="manifest" href="../favicons/site.webmanifest">
+    <link rel="mask-icon" href="../favicons/safari-pinned-tab.svg" color="#0362c8">
+    <link rel="shortcut icon" href="../favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#0362c8">
+    <meta name="msapplication-config" content="../favicons/browserconfig.xml">
+    <meta name="theme-color" content="#0362c8">
+    <meta name="description" content="Quick and simple file transfer between devices using QR codes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Maze&amp;family=Silkscreen&amp;family=Poppins&amp;display=swap" rel="stylesheet"> 
+    <title>aQRoss [Code]</title>
+    <link href="../css/all.css" rel="stylesheet">
+    <script defer src="../js/all.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500&amp;family=Dosis&amp;family=Michroma&amp;display=swap');
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #0362c8;
+            text-align: center;
+            overflow: hidden;
+        }
+        #kofi {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+        h1 {
+            font-family: 'Rubik Maze', cursive;
+            font-weight: 100;
+            letter-spacing: 0.05em;
+            color: white;
+            font-size: 14vh;
+            user-select: none;
+            margin-bottom: 0;
+            margin-top:25px;
+            filter:drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        }
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            color:white;
+            font-size: 1.9em;
+            letter-spacing: 0.1em;
+            user-select: none;
+            font-weight: 200;
+            filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        }
+        .choice {
+            display: inline-block;
+            position: relative;
+            text-align: center;
+        }
+        .choice-text {
+            position: absolute;
+            font-family: 'Silkscreen', cursive;
+            bottom: -2em;
+            left: 50%;
+            transform: translateX(-50%);
+            user-select: none;
+            display: none;
+            font-size: 2em;
+            color: white;
+            filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        }
+        .choice-icon {
+            height:200px;
+            max-height: 30vh;
+            width:auto;
+            image-rendering: pixelated;
+            transition: all .1s ease-in-out;
+            filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5)) opacity(0.9);
+        }
+        .choice-icon:hover{
+            transform: scale(1.1);
+        }
+        .choice-icon:hover + .choice-text {
+            display: block;
+        }
+        .choice-container{
+            margin-top:5vh;
+        }
+        #eng {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            transition-duration: 0.2s;
+            animation-timing-function: linear;
+        }
+        #eng:hover {
+            transform : scale(1.1);
+        }
+        .eu {
+            background-color: #039;
+            background-image: url(../images/EU.svg);
+            background-size: 100vh;
+            background-repeat: no-repeat;
+            background-position: center 20vh;
+        }
+        #home {
+            position: fixed;
+            height: 60px;
+            image-rendering: pixelated;
+            left:5px;
+            bottom:5px;
+        }
+        #home img {
+            height:60px;
+            width:60px;
+        }
+        #home:hover{
+            filter:brightness(0.8);
+        }
+        #counter {
+            visibility: hidden;
+            font-family: 'Poppins', sans-serif;
+            position: fixed;
+            bottom: 75px;
+            width: 100%;
+            color: white;
+            animation-duration: 2s;
+            animation-timing-function: ease-in-out;
+            transition: opacity 2000ms;
+            opacity : 0 ;
+            cursor: default;
+        }
+
+        .active {
+            opacity : 1 !important;
+        }
+        #info {
+            position: fixed;
+            height: 32px;
+            image-rendering: pixelated;
+            left:10px;
+            bottom:10px;
+            animation: infoSpin 10s ease-in-out 0s infinite normal none;
+        }
+        #info img {
+            height:32px;
+            width:32px;
+        }
+        @keyframes infoSpin{
+            0% {
+                transform:  rotate(0deg);
+            }
+            25% {
+                transform:  rotate(0deg);
+            }
+            50% {
+                transform:  rotate(180deg);
+            }
+            75% {
+                transform:  rotate(180deg);
+            }
+            100% {
+                transform:  rotate(0deg);
+            }
+        }
+        #info:hover{
+            filter: brightness(0.8);
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            color: white;
+            text-align: center;
+            margin: auto;
+            padding: 20px;
+            width: 80%;
+            height:80%;
+            pointer-events: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25em;
+            line-height: 2em;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            max-width: 450px;
+            padding-top: 10%;
+        }
+
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            right: 15px;
+            top: 15px;
+            position: fixed;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #code {
+            width: 200px;
+            height: 50px;
+            background-color:#2d7dd1;
+            border: none;
+            font-size: 25px;
+            text-align: center;
+            color: white;
+            font-weight: 100;
+            letter-spacing: 0.4em;
+            border-radius: 8px;
+        }
+        
+        input[type="text"] {
+            text-transform: uppercase;
+        }
+        #scanner {
+            display: none;
+            width:200px;
+            max-height: 400px;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10%;
+        }
+        #qr-reader{
+            border-radius: 10px;
+        }
+        button{
+            font-family: 'Poppins', sans-serif;
+            background-color: #00000000;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            height: 60px;
+            line-break: unset;
+            width: 198px;
+        }
+        select{
+            background-color: #00000069;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #qr-reader__camera_permission_button{
+            margin-top: -20px;
+        }
+        #qr-reader{
+            background-color: #00000069;
+        }
+        #qr-reader__dashboard_section{
+            padding: 0 !important;;
+        }
+        #qr-reader > div:nth-child(1) > img:nth-child(2){
+            top: -12px !important;
+            right: -15px !important;
+            float: right;
+        }
+        #qr-reader__scan_region{
+            min-height:100% !important;
+        }
+        #qr-reader__scan_region img {
+            display:none;
+        }
+        #qr-reader__header_message{
+            color:white !important;
+            font-family: 'Poppins', sans-serif !important;
+            border-top:none !important;
+        }
+        #scanner{
+            display: block;
+            background-color: #0362c8;
+            z-index: 5;
+            position: absolute;
+            bottom: 75px;
+        }
+        #html5-qrcode-anchor-scan-type-change{
+            visibility: hidden;
+        }
+        #qr-reader__scan_region > video{
+            border-radius: 9px 9px 0px 0px;
+        }
+        #qr-reader__dashboard_section_swaplink{
+            display: none !important;
+        }
+        #qr-reader > div:nth-child(1) > div:nth-child(1){
+            position: absolute;
+            font-family: 'Poppins', sans-serif; 
+            bottom: 70px;
+            top: auto !important;
+            right: 0px !important;
+            z-index: 2;
+            display: block;
+            padding: 5pt;
+            border: 1px solid silver;
+            font-size: 0.8em !important;
+            background: rgba(255, 255, 255, 0.42) !important;
+            width: 198px;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 1em;
+        }
+        #or-txt{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            color: white;
+            font-size: 2em;
+            opacity: 0.6;
+            cursor: default;
+            pointer-events: none;
+            z-index: -1;
+            font-family: 'Silkscreen', sans-serif;
+            line-height: 100vh;
+            padding-top: 5%;
+        }
+        @media screen and (max-width: 960px), (max-height:800px) {
+            .hidden{
+                opacity: 0;
+                transition: opacity 0s;
+            }
+            .shown {
+                opacity: 1;
+                transition: opacity 1.5s;
+            }
+            #code:focus + #scanner{
+                z-index:-1;
+            }
+            #code:active + #scanner{
+                z-index:-1;
+            }
+            
+            #eng {
+                left:auto;
+                right :5px;
+            }
+            .choice-container{
+                position: fixed;
+                bottom:20%;
+                margin-left: 50%;
+                transform: translateX(-50%);
+            }
+            .choice-icon{
+                height:140px;
+                width:auto;
+            }
+            .choice-text {
+                display: block;
+                bottom: -1.5em;
+                font-size: 1.5em;
+                font-weight: 600;
+                /*text-shadow: 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000;*/
+            }
+            #home{
+                left:-5px;
+                bottom:-5px;
+            }
+            h1 {
+                font-size: 4.8em;
+            }
+            h2 {
+                font-size: 1em;
+                margin-top: 5vh;
+            }
+            .modal-content {
+                font-size: 1em;
+                line-height: 1.5em;
+                padding-top: 0px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        if (location.protocol !== 'index.html') {
+            location.replace(`https:${location.href.substring(location.protocol.length)}`);
+        }
+        if (window.location.href.indexOf(".eu") > -1){
+            document.querySelector('body').classList.add('eu');
+        }
+        function toFront(){
+            document.getElementById('scanner').classList.remove('shown');
+            document.getElementById('scanner').classList.add('hidden');
+        }
+        function toBack(){
+            document.getElementById('scanner').classList.remove('hidden');
+            document.getElementById('scanner').classList.add('shown');
+        }
+    </script>
+    <a href="../index.html" style="text-decoration: none;"><h1>aQRoss</h1></a>
+    <div id="scanner">
+        <div id="qr-reader" width="400px"></div>
+    </div>
+    <h2>Enter Code:</h2>
+    <input type="text" id="code" name="code" minlength="6" maxlength="6" place="c0d3" onfocusin="toFront()" onfocusout="toBack()" oninput="tryCode()" onchange="tryCode()">
+    <div id="or-txt">OR</div> 
+    <div id="counter"></div>
+    <!--a id="eng" href="/en/"><img height="50" width="50" src="/images/eng.png"></a-->
+    <!--div id="info" title="disclaimer"><img height="60" src="/images/info.png"></div-->
+    <a id="home" href="../index.html"><img height="60" src="../images/back.png"></a>
+    <a id="kofi" href='https://ko-fi.com/F2F0725HB' target='_blank'><img height='36' style='border:0px;height:36px;' src='../../cdn.ko-fi.com/cdn/kofi330f4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+            <b><u>DISCLAIMER</u></b>
+            <br>Your files are transferred over https but are <u>NOT</u> stored encrypted. Your files get uploaded to a temporary folder that deletes itself after 5 minutes.
+            <br>The temporary folder has a random 6 letter name, and anyone can access your files if they guess the folder and file name within the 5 minutes.
+            <br><b><i>DO NOT USE TO SHARE SENSITIVE DATA</i></b>
+        </p>
+        </div>
+        <a href="https://www.digitalocean.com/?refcode=cd25415e65b7&amp;utm_campaign=Referral_Invite&amp;utm_medium=Referral_Program&amp;utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge 2.svg" alt="DigitalOcean Referral Badge" style="width: 150px;bottom: 12px;position: absolute;transform: translateX(-50%);"></a>
+      
+    </div>
+    <script>
+        let firstUpdate = true;
+        const counterTexts = [" files helped aQRoss", " sent"];
+        const random = Math.floor(Math.random() * counterTexts.length);
+        
+        function tryCode(){
+            var code = document.getElementById('code').value;
+            if(code.length == 6){
+                console.log(code);
+                window.location.href = "/receive/"+code.toLowerCase();
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            window.location.href = decodedText;
+            if(decodedText.contains('aqross')){
+                
+            }
+        }
+
+        function onScanFailure(error) {
+            // handle scan failure, usually better to ignore and keep scanning.
+            // for example:
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+        "qr-reader",
+        { fps: 24, qrbox: {width: 200, height: 200} },
+        /* verbose= */ false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        setTimeout(function(){
+            document.getElementById('html5-qrcode-button-camera-permission').innerHTML = 'Open Camera';
+        },500)
+        document.getElementById('html5-qrcode-button-camera-permission').innerHTML = 'Open Camera';
+    </script>
+</body>
+
+<!-- Mirrored from aqross.app/code/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Mar 2023 18:41:44 GMT -->
+</html>

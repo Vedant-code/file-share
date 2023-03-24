@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from aqross.app/send/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Mar 2023 18:41:41 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <link rel="apple-touch-icon" sizes="180x180" href="../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicons/favicon-16x16.png">
+    <link rel="manifest" href="../favicons/site.webmanifest">
+    <link rel="mask-icon" href="../favicons/safari-pinned-tab.svg" color="#0362c8">
+    <link rel="shortcut icon" href="../favicons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#0362c8">
+    <meta name="msapplication-config" content="../favicons/browserconfig.xml">
+    <meta name="theme-color" content="#0362c8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Maze&amp;family=Poppins&amp;display=swap" rel="stylesheet"> 
+    <title>aQRoss ↑ Send</title>
+    <link href="../css/all.css" rel="stylesheet">
+    <script defer src="../js/all.js"></script>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        h1 {
+            font-family: 'Rubik Maze', cursive;
+            font-weight: 100;
+            text-align: center;
+            letter-spacing: 0.05em;
+            color: white;
+            font-size: 14vh;
+            user-select: none;
+            margin-bottom: 0;
+            margin-top:25px;
+            filter:drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        }
+        h2 {
+            visibility: hidden;
+            text-align: center;
+            color: white;
+            font-size: 1.9em;
+            letter-spacing: 0.1em;
+            user-select: none;
+            font-weight: 200;
+            filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            height: auto;
+        }
+        #fileslbl {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-size: 3vh;
+            transition: .5s;
+			animation-duration: 1s;
+			animation-fill-mode: forwards;
+			animation-iteration-count: infinite;
+            top: 0;
+            bottom: 0;
+            position: absolute;
+            right: 0;
+            left: 0;
+            height: 100%;
+        }
+        #filesfld {
+            display: none;
+        }
+
+        #progress {
+            position: absolute;
+            z-index:-1;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            width: 0;
+            height:15px;
+            background-color: #003e7f;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 15px;
+            transition-duration: .1s;
+            transform-style: linear;
+        }
+
+        .eu {
+            background-color: #039;
+            background-image: url(../images/EU.svg);
+            background-size: 100vh;
+            background-repeat: no-repeat;
+            background-position: center 20vh;
+        }
+
+        .loader {
+            
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 99999;
+        }
+
+        .loader-inner {
+            bottom: 0;
+            height: 60px;
+            left: 0;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100px;
+        }
+
+        .loader-line-wrap {
+            animation: 
+                spin 2000ms cubic-bezier(.175, .885, .32, 1.275) infinite
+            ;
+            box-sizing: border-box;
+            height: 50px;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            transform-origin: 50% 100%;
+            width: 100px;
+        }
+        .loader-line {
+            border: 4px solid transparent;
+            border-radius: 100%;
+            box-sizing: border-box;
+            height: 100px;
+            left: 0;
+            margin: 0 auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100px;
+        }
+        .loader-line-wrap:nth-child(1) { animation-delay: -50ms; }
+        .loader-line-wrap:nth-child(2) { animation-delay: -100ms; }
+        .loader-line-wrap:nth-child(3) { animation-delay: -150ms; }
+        .loader-line-wrap:nth-child(4) { animation-delay: -200ms; }
+        .loader-line-wrap:nth-child(5) { animation-delay: -250ms; }
+
+        .loader-line-wrap:nth-child(1) .loader-line {
+            border-color: hsl(0, 80%, 60%);
+            height: 90px;
+            width: 90px;
+            top: 7px;
+        }
+        .loader-line-wrap:nth-child(2) .loader-line {
+            border-color: hsl(60, 80%, 60%);
+            height: 76px;
+            width: 76px;
+            top: 14px;
+        }
+        .loader-line-wrap:nth-child(3) .loader-line {
+            border-color: hsl(120, 80%, 60%);
+            height: 62px;
+            width: 62px;
+            top: 21px;
+        }
+        .loader-line-wrap:nth-child(4) .loader-line {
+            border-color: hsl(180, 80%, 60%);
+            height: 48px;
+            width: 48px;
+            top: 28px;
+        }
+        .loader-line-wrap:nth-child(5) .loader-line {
+            border-color: hsl(240, 80%, 60%);
+            height: 34px;
+            width: 34px;
+            top: 35px;
+        }
+
+        @keyframes spin {
+            0%, 15% {
+                transform: rotate(0);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <style>
+    body {
+        background-color: #0362c8;
+        background-size: 100% auto;
+    }
+    #qrcode {
+        width: 216px;
+        height: 216px;
+        background-image: url(../images/default.gif);
+        background-size: contain;
+        margin-left: 50%;
+        transform: translateX(-50%);
+        transition: transform .3s ease-in-out;
+    }
+    #qrcode:hover{
+        transform: translateX(-50%) scale(1.5);
+    }
+    #countdown {
+        text-align: center;
+        color: white;
+        font-size: 1.25em;
+        user-select: none;
+        font-weight: 200;
+        filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+    }
+    #fileslbl {
+        /*text-shadow: 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000;*/
+        filter: drop-shadow(0.35rem 0.35rem 0.4rem rgb(0, 0, 0));
+        align-items: end;
+        padding-bottom: 100px;
+    }
+
+    #kofi { 
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+    }
+    #filename {
+        position: absolute;
+        top: 5px;
+        text-align: center;
+        width: 100%;
+        color: white;
+        font-size: 1.4rem;
+    }
+    .uploaded-filename {
+        text-shadow: 2px 2px 2px #000, 2px -2px 2px #000, 2px 2px 2px #000, -2px -2px 2px #000;
+    }
+    .success{
+        border: solid white 8px;
+        border-radius: 15px;
+        background-image: none !important;
+        background-color: white;
+        position: absolute;
+        cursor:none;
+        z-index:1000;
+    }
+
+    #drop-area {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+    .highlight {
+        background-color: #0051a881;
+    }
+    #home {
+        position: fixed;
+        height: 60px;
+        image-rendering: pixelated;
+        left:5px;
+        bottom:5px;
+    }
+    #home img {
+        height:60px;
+        width:60px;
+    }
+    #home:hover{
+        filter:brightness(0.8);
+    }
+    #info {
+        position: fixed;
+        height: 32px;
+        image-rendering: pixelated;
+        right: -16px;
+        bottom:10px;
+        transition: all .5s ease-in-out 0s;
+    }
+    #info img {
+        height:32px;
+        width:32px;
+    }
+    #info:hover{
+        transform: rotate(180deg);
+        filter: brightness(0.8);
+    }
+    #toggle {
+        font-family: 'Poppins', sans-serif;
+        position:fixed;
+        text-align:center;
+        right: 15px;
+        border:solid 2px white;
+        width:200px;
+        height:62px;
+        border-radius: 10px;
+        color:white;
+        font-size:1.25em;
+        transition: all 1s ease-in-out 0s;
+        top: 45%;
+        right: -80px;
+        transform:rotate(90deg);
+    }
+    .left {
+        float:left;
+        width:50%;
+        line-height:60px;
+        color:white;
+        border-radius: 8px 0px 0px 0px;
+    }
+    .right{
+        float:right;
+        width:50%;
+        line-height:60px;
+        color:white;
+        border-radius: 0px 8px 8px 0px;
+    }
+    .active{
+        background-color:rgba(255,255,255,0.5);
+        color:#0362c8
+    }
+    .toggle-btn:hover{
+        background-color: rgba(255, 255, 255, 0.71);
+        
+        border-radius: 8px 0px 0px 8px;
+        color:#0362c8;
+    }
+
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 9999; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        color: white;
+        text-align: center;
+        margin: auto;
+        padding: 20px;
+        width: 80%;
+        height:80%;
+        pointer-events: none;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.25em;
+        line-height: 2em;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        max-width: 450px;
+        padding-top: 10%;
+    }
+
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        right: 15px;
+        top: 15px;
+        position: fixed;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    #use-code{
+        font-family: 'Poppins', sans-serif;
+        position: fixed;
+        visibility: visible;
+        width:200px;
+        height:30px;
+        top: 45%;
+        left: -88px;
+        color: white;
+        cursor: pointer;
+        border: solid 2px white;
+        border-radius: 7px;
+        padding-left: 12px;
+        padding-right: 12px;
+        transform: rotate(-90deg);
+        text-align: center;
+    }
+    #use-code:hover{
+        color: #0362c8;
+        background-color: #ffffff91;
+    }
+    @media only screen and (max-height: 800px) {
+        h1 {
+            font-size: 4.8em;
+        }
+        h2 {
+            font-size:2.25em;
+        }
+    }
+    @media only screen and (min-width:960px){
+        #kofi{
+            visibility: visible;
+        }
+        .swipe-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 5%;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 75%;
+        }
+        .swipe-item {
+            text-align: center;
+            margin: 0px 25px 0px 25px;
+            transition: ease-in-out .2s;
+        }
+        
+        .swipe-wrap:hover > .swipe-item {
+            filter: opacity(0.5) blur(4px);;
+        }
+        .swipe-wrap .swipe-item:hover {
+            filter: opacity(1.0);
+            transform: scale(1.5);
+            z-index:420;
+        }
+        
+        .left {
+            border-radius: 0px 0px 0px 8px;
+        }
+        .right{
+            border-radius: 0px 0px 8px 0px;
+        }
+        #info {
+            width: 32px;
+            margin-left: 50%;
+            margin-right:50%;
+        }
+    }
+
+    @media only screen and (max-width: 960px) {
+        #info {
+            right: 10px;
+        }
+        #kofi{
+            visibility: hidden;
+        }
+        h1 {
+            font-size: 4.8em;
+        }
+        h2 {
+            background-color: #000000ad;
+        }
+        #use-code{
+            transform: rotate(0deg);
+            text-align: center;
+            bottom: 10px;
+            height: 30px;
+            width: 33%;
+            left:33%;
+            top:auto;
+        }
+        #countdown {
+            background-color: #000000ad;
+        }
+        .swipe {
+            overflow: hidden;
+            visibility: hidden;
+            position: relative;
+        }
+        .swipe-wrap {
+            overflow: hidden;
+            position: relative;
+        }
+        .swipe-wrap > div {
+            float: left;
+            width: 100%;
+            position: relative;
+            text-align: center;
+        }
+
+        #fileslbl{
+            align-items: end;
+            padding-bottom: 100px;
+        }
+        body {
+            background-size: auto 100vh;
+            background-position: top center;
+        }
+        #qrcode {
+            max-width: 80%;
+        }
+        .success {
+            height:auto !important;
+            pointer-events: none;
+        }
+        #home{
+            left:-5px;
+            bottom:-5px;
+        }
+        .modal-content {
+            font-size: 1em;
+            line-height: 1.5em;
+        }
+    }
+    </style>
+    <h1>aQRoss</h1>
+    <h2 id="guide" style="display: none;">Scan to download</h2>
+    <p id="countdown" style="visibility:hidden;">5:00 remaining</p>
+    <div id="slider" class="swipe">
+        <div id="swipe-container" class="swipe-wrap">
+        </div>
+    </div>
+    <div id="qrcode"></div>
+    <div id="drop-area">
+        <form id="filesfrm" action="https://aqross.app/transfer" method="post" onsubmit="return submitFilesForm(this);">
+            <input type="file" name="filesfld" id="filesfld" accept="*" onchange="submitFilesForm(this.form);" single/>
+            <label for="filesfld" id="fileslbl"
+            ondragleave="stopDefault(event);dragLeave(this);"
+            ondrop="stopDefault(event);dragLeave(this);addFilesAndSubmit(event);">Click anywhere or drop file</label>
+        </form>
+    </div>
+    
+    <div style="text-align: left;"><div id="progress"></div></div>
+    <div class="loader" id="loading_rainbow" style="display: none;">
+        <div class="loader-inner">
+            <div class="loader-line-wrap">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-wrap">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-wrap">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-wrap">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-wrap">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
+    <div id="filename"></div>
+    <a href="../code/index.html" style="text-decoration:none;"><div id="use-code">use code</div></a>
+    <div id="toggle">
+        <a href="../multisend/index.html" style="text-decoration: none;">
+            <div class="left toggle-btn">
+            multiple
+            </div>
+        </a>
+        <a href="index.html" style="text-decoration: none;">
+            <div class="right toggle-btn active">
+                single
+            </div>
+        </a>
+    </div>
+    <a id="home" href="../index.html"><img height="60" src="../images/back.png"></a>
+    <div id="info" title="disclaimer"><img height="60" src="../images/info.png"></div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+            <b><u>DISCLAIMER</u></b>
+            <br>Your files are transferred over https but are <u>NOT</u> stored encrypted. Your files get uploaded to a temporary public folder that deletes itself after 5 minutes.
+            <br>The temporary folder has a random 6 letter name, and anyone can access your files if they guess the folder and file name within the 5 minutes.
+            <br><b><i>DO NOT USE TO SHARE SENSITIVE DATA</i></b>
+        </p>
+        </div>
+    </div>
+    <a id="kofi" href='https://ko-fi.com/F2F0725HB' target='_blank'><img height='36' style='border:0px;height:36px;' src='../../cdn.ko-fi.com/cdn/kofi330f4.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+    <script src="../js/qrcode.js"></script>
+    <script type="text/javascript">
+        let latestUpload = '';
+        let url = 'https://' + location.host;
+        let today = new Date();
+        let dropArea = document.getElementById('drop-area');
+        let qrArea = document.getElementById('qrcode');
+        let label = document.getElementById("fileslbl");
+        let fileReady = false;
+        let fileName;
+        let sessionId = makeid(6); //Math.random().toString(36).substring(2,8);
+        let c;
+
+        today = today.toISOString().split('T')[0]
+
+        if (window.location.href.indexOf(".eu") > -1){
+            document.querySelector('body').classList.add('eu');
+            document.getElementById('qrcode').style.backgroundImage = 'none';
+        }
+
+        function getFile(){
+            window.location.href = url + "/send/" + sessionId + '/' + fileName;
+        }
+        function makeid(length) {
+            var result           = '';
+            var characters       = 'abcdefghijklmnopqrstuvwxyz123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+        function stopDefault(event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        function dragEnter(label, text){
+            document.getElementById("fileslbl").innerText = 'Drop to send'
+        }
+        function dragOver(label, text) {
+            dropArea.classList.add('highlight')
+            console.log(text == undefined);
+        }
+        function dragLeave(label, text) {
+            /* THIS SHOULD REMOVE ALL STYLING BY dragOver() */
+			dropArea.classList.remove('highlight')
+            label.innerText = (text == undefined) ? 'Click or drop file here' : text;
+        }
+        function addFilesAndSubmit(event) {
+            var files = event.target.files || event.dataTransfer.files;
+            document.getElementById("filesfld").files = files;
+            submitFilesForm(document.getElementById("filesfrm"));
+        }
+        function submitFilesForm(form) {
+            if(form.filesfld.files[0].size > 20971520){
+                alert("20MB maximum\nConsider making a donation, so I can upgrade the server :)");
+            } else {
+                dropArea.classList.remove('highlight');
+                document.getElementById('qrcode').style.backgroundImage = 'none';
+                document.getElementById('loading_rainbow').style.display = 'block'
+                
+                //dragOver(label, "Uploader..."); // set the drop zone text and styling
+                dragOver(label, "")
+                var fd = new FormData();
+                for(var i = 0; i < form.filesfld.files.length; i++) {
+                    var field = form.filesfld;
+                    fd.append(field.name, field.files[i], field.files[i].name);
+                }
+                var progress = document.getElementById("progress");
+                var x = new XMLHttpRequest();
+                if(x.upload) {
+                    x.upload.addEventListener("progress", function(event){
+                        var percentage = parseInt(event.loaded / event.total * 100);
+                        progress.innerText = progress.style.width = percentage + "%";
+                    });
+                }
+                x.onreadystatechange = function () {
+                    if(x.readyState == 4) {
+                        progress.innerText = progress.style.width = "";
+                        form.filesfld.value = "";
+                        document.getElementById('loading_rainbow').style.display = 'none'
+                        // this will reset the text and styling of the drop zone
+                        if(x.status == 200) {
+                            dragLeave(label, 'Done!');
+                            setTimeout(function(){
+                                dragLeave(label, 'Click to send more'); 
+                                document.querySelector('body').style.backgroundImage = latestUpload;
+                            }, 3000);
+                            // ADD response on succesful upload
+                            
+                            var images = JSON.parse(x.responseText);
+                            if(images.length > 0){
+                                console.log(images[0]);
+                                latestUpload = "url(/send/" + sessionId + images[0].replaceAll(' ', '%20')+")";
+                                document.querySelector('body').style.backgroundImage = latestUpload;
+                                document.getElementById('filename').innerHTML = (images[0] == undefined) ? 'Click or drop file here' : images[0].slice(1);
+                                document.getElementById('filename').classList.add("uploaded-filename");
+                            }
+                            document.getElementById("qrcode").innerHTML = '';
+                            document.getElementById("qrcode").classList.add('success');
+                            new QRCode(document.getElementById("qrcode"), {
+                                text : url + "/send/" + sessionId + images[0].replaceAll(' ', '%20'),
+                                width: 200,
+                                height: 200
+                            } );
+                            document.getElementById("qrcode").title = '';
+                            document.getElementById('guide').style.display = 'block';
+                            document.getElementById('guide').style.visibility = 'visible';
+                            
+                            startCountdown();
+                        }
+                        else {
+                            dragLeave(label, 'Damn! Upload failed');
+                            // failed - TODO: Add code to handle server errors
+                        }
+                    }
+                };
+                x.open("post.html", "/send/"+sessionId, true);
+                x.send(fd);
+                return false;      
+            }
+             
+        }
+        window.addEventListener('load', function () {
+            document.getElementById('loading_rainbow').style.display = 'none'
+        })
+
+
+        ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false)
+        })
+
+        function preventDefaults (e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
+
+
+        dropArea.addEventListener('dragover', dragOver, false)
+        dropArea.addEventListener('dragenter', dragEnter, false)
+
+        ;['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, dragLeave, false)
+        })
+
+        function highlight(e) {
+            dropArea.classList.add('highlight')
+        }
+
+        function unhighlight(e) {
+            dropArea.classList.remove('highlight')
+        }
+
+        function startCountdown(){
+            clearInterval(c);
+            distance = 5 * 60 * 1000;
+            var minutes = Math.floor(distance  / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Display the result in the element with id="countdown"
+            document.getElementById("countdown").style.visibility = "visible";
+            c = setInterval(function() {
+                
+                // Find the distance between now and the count down date
+                distance = distance - 1000;
+            
+                // Time calculations for days, hours, minutes and seconds
+                minutes = Math.floor(distance  / (1000 * 60));
+                seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+                // Display the result in the element with id="countdown"
+                document.getElementById("countdown").innerHTML = minutes + ":" + ('0000'+seconds).slice(-2) + " remaining";
+            
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(c);
+                    document.getElementById("countdown").innerHTML = "file self-destructed";
+                }
+            }, 1000);
+        }
+        //new QRCode(document.getElementById("qrcode"), url + "/images/defaultqr.gif");
+    </script>
+
+    <script>
+
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("info");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+<!-- Mirrored from aqross.app/send/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 24 Mar 2023 18:41:43 GMT -->
+</html>
